@@ -12,11 +12,24 @@ var PostModel = new Schema({
         minlength:8,
         max: 50
     },
-    image: String,
+    image: {
+        type: String,
+        required: true
+    },
     userId:{
-        required: true,
-        ref: userId
-    }
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    upvotes : { type: Number , default: 0}
 },{timestamps: true});
+
+PostModel.methods.upvote = function(){
+    this.upvotes++ ;
+}
+
+PostModel.methods.downvote = function(){
+    this.upvotes--;
+}
 
 module.exports = mongoose.model('Posts',PostModel);

@@ -73,28 +73,21 @@ const auth = async function(req,res,next){
     try {
         let user = await User.findOne({email: req.body.email})
         if(!user){
-            return res.status(400).json({
-                message: 'User does not exist',
-                fix: {
-                    request: 'POST',
-                    url: 'http://localhost:3000/users/create'
-                }
+            return res.status(401).json({
+                message: 'Invalid email or password'
             })
         }
         const passCheck = await user.validPassword(req.body.password);
         if(!passCheck){
-            return res.status(400).json({
-                message: 'Invalid email or password',
-                fix : {
-                    message: 'Forgot Password !'
-                }
+            return res.status(401).json({
+                message: 'Invalid email or password'
             })
         }
         const token = await user.toAuthJSON();
         res.status(200).json(token);
     } catch(err) {
         res.status(400).json({
-            message: err
+            error: err
         })
     }
 }

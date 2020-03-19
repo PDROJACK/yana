@@ -1,14 +1,18 @@
-var express = require('express');
-var router = express.Router();
-var postsController = require('../controller/postController');
+const express = require('express');
+const router = express.Router();
+const postsController = require('../controller/postController');
+const auth = require('../middleware/user-auth');
 
 /* Get all the posts. */
-router.get('/',postsController.getPosts);
+router.get('/',auth.userAuth,postsController.getPosts);
 
 /* Upload a post. */
-router.post('/',postsController.uploadPost);
+router.post('/create',postsController.createPost);
+
+/* Upvote a post. */
+router.post('/:postId/upvote',postsController.upvote);
 
 /* Delete a post. */
-router.delete('/',postsController.deletePosts);
+//router.delete('/',postsController.deletePosts);
 
 module.exports = router;
